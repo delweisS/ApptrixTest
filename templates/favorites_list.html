@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Избранное{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h1>Избранные криптовалюты</h1>
+    В этом разделе перечислены ваши избранные криптовалюты.
+    {% if favorites_list %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle caption-top">
+                <caption>Данные предоставлены с сайта <a class="text-secondary" href="https://coinmarketcap.com/">coinmarketcap.com</a>.</caption>
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th scope="col">#</th>
+                        <th scope="col">Название</th>
+                        <th scope="col">Символьный код</th>
+                        <th scope="col">Текущий курс</th>
+                        <th scope="col">1ч %</th>
+                        <th scope="col">24ч %</th>
+                        <th scope="col">7д %</th>
+                        <th scope="col">Объем торгов</th>
+                        <th scope="col">Рыночная капитализация</th>
+                        <th scope="col">Избранное</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for favorite in favorites_list %}
+                        <tr>
+                            <th scope="row" class="text-center">{{ favorite.id }}</th>
+                            <th class="text-center">{{ favorite.name }}</th>
+                            <th class="text-center">{{ favorite.symbol }}</th>
+                            <th class="text-center">{{ favorite.price|intcomma }}$</th>
+                            <th class="text-center" {% if favorite.percent_change_1h < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ favorite.percent_change_1h }}%</th>
+                            <th class="text-center" {% if favorite.percent_change_24h < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ favorite.percent_change_24h }}%</th>
+                            <th class="text-center" {% if favorite.percent_change_7d < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ favorite.percent_change_7d }}%</th>
+                            <th class="text-center">{{ favorite.volume|intcomma }}$</th>
+                            <th class="text-center">{{ favorite.market_cap|intcomma }}$</th>
+                            <th class="text-center"><a style="text-decoration: none; color: var(--bs-danger);" href="{% url 'cryptocurrency:remove_favorite' favorite.id %}">Удалить из избранного</a></th>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <h4 class="mt-5">Вы еще не начали отслеживать криптовалюты.</h4>
+    {% endif %}
+</div>
+{% endblock content %}

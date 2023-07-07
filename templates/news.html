@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Новости{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h1>Новости криптовалют</h1>
+    В этом разделе можно ознакомиться с новостями криптовалют.
+    <p class="text-secondary mt-2">Все новости предоставлены с помощью <a href="https://newsapi.org/" class="text-secondary">NewsAPI</a>.</p>
+    {% for news in news_list %}
+        <div class="card mb-3">
+            <div class="card-header">
+                {% if news.author %}
+                    Автор статьи: {{ news.author }} | Опубликовано: {{ news.published_at }}
+                {% else %}
+                    Автор не найден
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ news.title }}</h4>
+                {% if news.url_to_image %}
+                    <img src="{{ news.url_to_image }}" alt="{{ news.title }}" class="mx-auto d-block rounded mt-2" style="max-width: 600px; max-height: 600px">
+                {% endif %}
+                <p class="card-text mt-2">{{ news.description }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{ news.url }}" style="text-decoration: none;">Читать полностью...</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}

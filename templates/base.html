@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'img/favicon.svg' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <title>{% block title %}{% endblock title %} - Crypto</title>
+  </head>
+  <body>
+    {% include 'include/navbar.html' %}
+    {% block content %}
+    {% endblock content %}
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+  </body>
+</html>

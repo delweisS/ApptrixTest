@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Главная{% endblock title %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h1>Информация о криптовалютах</h1>
+    {% if user.is_authenticated %}
+        Вы авторизованы как {{ user.username }}.<br>
+        В таблице ниже можно ознакомиться с информацией о криптовалютах.
+    {% else %}
+        Вы не авторизованы.
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle caption-top">
+            <caption>Данные предоставлены с сайта <a class="text-secondary" href="https://coinmarketcap.com/">coinmarketcap.com</a>.</caption>
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Символьный код</th>
+                    <th scope="col">Текущий курс</th>
+                    <th scope="col">1ч %</th>
+                    <th scope="col">24ч %</th>
+                    <th scope="col">7д %</th>
+                    <th scope="col">Объем торгов</th>
+                    <th scope="col">Рыночная капитализация</th>
+                    {% if user.is_authenticated %}
+                    <th scope="col">Избранное</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for crypto in crypto_list %}
+                    <tr>
+                        <th scope="row" class="text-center">{{ crypto.id }}</th>
+                        <th class="text-center">{{ crypto.name }}</th>
+                        <th class="text-center">{{ crypto.symbol }}</th>
+                        <th class="text-center">{{ crypto.price|intcomma }}$</th>
+                        <th class="text-center" {% if crypto.percent_change_1h < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ crypto.percent_change_1h }}%</th>
+                        <th class="text-center" {% if crypto.percent_change_24h < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ crypto.percent_change_24h }}%</th>
+                        <th class="text-center" {% if crypto.percent_change_7d < 0 %} style="color: var(--bs-danger);" {% else %} style="color: var(--bs-success);" {% endif %}>{{ crypto.percent_change_7d }}%</th>
+                        <th class="text-center">{{ crypto.volume|intcomma }}$</th>
+                        <th class="text-center">{{ crypto.market_cap|intcomma }}$</th>
+                        {% if user.is_authenticated %}
+                            {% if crypto in favorites_list %}
+                                <th class="text-center"><a style="text-decoration: none; color: var(--bs-danger);" href="{% url 'cryptocurrency:remove_favorite' crypto.id %}">Удалить из избранного</a></th>
+                            {% else %}
+                                <th class="text-center"><a style="text-decoration: none; color: var(--bs-warning);" href="{% url 'cryptocurrency:add_favorite' crypto.id %}">Добавить в избранное</a></th>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}
